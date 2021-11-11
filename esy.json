@@ -1,19 +1,21 @@
 {
   "scripts": {
     "start": "./_esy/default/build/default/app.exe",
-    "build": "dune build"
+    "build": "dune build",
+    "test": "dune build @test/runtest -f"
   },  
   "dependencies": {
     "@opam/dream": "1.0.0~alpha2",
     "@opam/dune": "^2.0",
-    "@opam/re": "^1.10.3",
+    "@opam/ppx_yojson_conv": "*",
+    "@opam/rresult": "^0.7.0",
     "ocaml": "4.12.x"
   },
   "devDependencies": {
+    "@opam/alcotest": "^1.5.0",
     "@opam/ocaml-lsp-server": "*",
     "@opam/ocamlformat": "*",
     "@opam/ocamlformat-rpc": "*",
-    "@opam/ppx_yojson_conv": "*",
     "@opam/utop": "*"
   },
   "resolutions": {

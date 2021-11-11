@@ -3,13 +3,13 @@ module Coordinate : sig
 
   val make : x:int -> y:int -> t
 
-  val pretty : t -> string
+  val to_string : t -> string
 end
 
 module Piece : sig
   type t
 
-  val pretty : t option -> string
+  val to_string : t -> string
 end
 
 module Player : sig
@@ -17,7 +17,7 @@ module Player : sig
 
   val make : string -> t
 
-  val pretty : t -> string
+  val to_string : t -> string
 end
 
 module Board : sig
@@ -45,9 +45,19 @@ module Board : sig
       | `Piece_Out_Of_Bounds of Coordinate.t ] )
     result
 
-  val transpose : t -> t
+  val transpose :
+    f:
+      (t ->
+      ( 'a,
+        ([> `Board_Size_Too_Big of int * int * int
+         | `Board_Size_Too_Small of int * int * int ]
+         as
+         'b) )
+      result) ->
+    board:'c array ->
+    ('a, 'b) result
 
-  val pretty : t -> string
+  val to_string : t -> string
 end
 
 module Game : sig
@@ -63,7 +73,10 @@ module Game : sig
       | `Board_Size_Too_Small of int * int * int ] )
     result
 
-  val piece_of_player : player:Player.t -> game:t -> Piece.t option
+  val piece_of_player :
+    player:string ->
+    game:t ->
+    (Piece.t, [> `Player_Not_Part_Of_Game of string * string ]) result
 
   val place_piece :
     player:Player.t ->
@@ -80,15 +93,7 @@ module Game : sig
 
   val check_win : t -> string option
 
-  val pretty : t -> string
+  val to_string : t -> string
 
   val to_json : t -> string
 end
-
-(* module Error_Message : sig *)
-(*   type error_variants *)
-
-(*   type t *)
-
-(*   val make : error:error_variants -> human_error:string -> t *)
-(* end *)

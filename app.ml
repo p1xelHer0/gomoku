@@ -1,28 +1,31 @@
+open Rresult
+open R
+
 type player_move_body = { player : string; x : int; y : int }
-[@@deriving yojson]
+[@@deriving of_yojson]
 
 type new_game_body = {
   size : int; [@default 20]
   player_1 : string;
   player_2 : string;
 }
-[@@deriving yojson]
+[@@deriving of_yojson]
 
 module Coordinate = struct
   type t = { x : int; y : int }
 
   let make ~x ~y = { x; y }
 
-  let pretty coordinate =
+  let to_string coordinate =
     "(" ^ string_of_int coordinate.x ^ "," ^ string_of_int coordinate.y ^ ")"
 end
 
 module Piece = struct
-  type t = X | O [@@deriving yojson]
+  type t = X | O
 
-  let pretty = function
-    | Some piece -> ( match piece with X -> "x" | O -> "o")
-    | None -> "_"
+  let yojson_of_t = function X -> `String "x" | O -> `String "o"
+
+  let to_string = function X -> "x" | O -> "o"
 end
 
 module Player = struct
@@ -30,11 +33,11 @@ module Player = struct
 
   let make id = id
 
-  let pretty player = player ^ "\n"
+  let to_string player = player
 end
 
 module Board = struct
-  type t = Piece.t option array array [@@deriving yojson]
+  type t = Piece.t option array array [@@deriving yojson_of]
 
   let max_size = 50
 
@@ -48,41 +51,30 @@ module Board = struct
     else Ok (Array.make_matrix size size (None : Piece.t option) : t)
 
   let get_piece ~(coordinate : Coordinate.t) ~(board : t) =
-    try board.(coordinate.y).(coordinate.x) with Invalid_argument _ -> None
+    try board.(coordinate.y).(coordinate.x) with _ -> None
 
   let place_piece ~piece ~coordinate ~board =
     try
-      let piece' = get_piece ~coordinate ~board in
-      match piece' with
+      match get_piece ~coordinate ~board with
       | None ->
           let () = board.(coordinate.y).(coordinate.x) <- Some piece in
           Ok board
       | Some _ -> Error (`Piece_Already_Placed coordinate)
     with Invalid_argument _ -> Error (`Piece_Out_Of_Bounds coordinate)
 
-  let transpose board =
-    let size = Array.length board in
-    let new_board = make size in
+  let transpose ~f ~board = Array.length board |> make >>= fun b -> f b
 
-    match new_board with
-    | Error (`Board_Size_Too_Small _size) -> board
-    | Error (`Board_Size_Too_Big _size) -> board
-    | Ok transposed_board ->
-        for i = 0 to size - 1 do
-          for j = 0 to size - 1 do
-            transposed_board.(i).(j) <- board.(j).(i)
-          done
-        done;
-
-        transposed_board
-
-  let pretty board =
-    let pretty_string_of_row row =
-      Array.fold_left (fun acc p -> acc ^ Piece.pretty p ^ "|") "|" row ^ "\n"
+  let to_string board =
+    let string_of_piece = function
+      | Some piece -> Piece.to_string piece
+      | None -> "_"
+    in
+    let string_of_row row =
+      Array.fold_left (fun acc p -> acc ^ string_of_piece p ^ "|") "|" row
+      ^ "\n"
     in
 
-    Array.map pretty_string_of_row board
-    |> Array.fold_left (fun acc s -> acc ^ s) ""
+    Array.map string_of_row board |> Array.fold_left (fun acc s -> acc ^ s) ""
 end
 
 module Game = struct
@@ -94,102 +86,166 @@ module Game = struct
     player_1 : string;
     player_2 : string;
   }
-  [@@deriving yojson]
+  [@@deriving yojson_of]
 
   let make ~size ~player_1 ~player_2 ~game_id =
-    match Board.make size with
-    | Error (`Board_Size_Too_Small size) -> Error (`Board_Size_Too_Small size)
-    | Error (`Board_Size_Too_Big size) -> Error (`Board_Size_Too_Big size)
-    | Ok board ->
-        Ok
-          {
-            id = game_id;
-            board;
-            player_1;
-            player_2;
-            winner = None;
-            next_move = player_1;
-          }
+    let make_aux board =
+      Ok
+        {
+          id = game_id;
+          board;
+          player_1;
+          player_2;
+          winner = None;
+          next_move = player_1;
+        }
+    in
+    Board.make size >>= make_aux
 
   let piece_of_player ~player ~game =
-    if player = game.player_1 then Some Piece.X
-    else if player = game.player_2 then Some Piece.O
-    else None
+    if player = game.player_1 then Ok Piece.X
+    else if player = game.player_2 then Ok Piece.O
+    else Error (`Player_Not_Part_Of_Game (player, game.id))
 
   let place_piece ~player ~coordinate ~game =
     if player <> game.next_move then Error (`Player_Not_Next player)
     else
-      let board = game.board in
-
-      match piece_of_player ~player ~game with
-      | None -> Error (`Player_Not_Part_Of_Game (player, game.id))
-      | Some piece -> Board.place_piece ~piece ~coordinate ~board
+      piece_of_player ~player ~game >>= fun piece ->
+      Board.place_piece ~coordinate ~board:game.board ~piece
 
   let next_move game =
     if game.player_1 = game.next_move then game.player_2 else game.player_1
 
   let check_win game =
-    let string_of_board board =
-      let string_of_row row =
-        Array.fold_left (fun acc p -> acc ^ Piece.pretty p) "|" row
-      in
+    let board = game.board in
+    let length_of_board = Array.length game.board - 1 in
 
-      (Array.map string_of_row board
-      |> Array.fold_left (fun acc s -> acc ^ s) "")
-      ^ "|"
+    let row_of_board = Array.fold_left Array.append [||] in
+
+    let row_of_col t_board =
+      for i = 0 to length_of_board do
+        for j = 0 to length_of_board do
+          t_board.(i).(j) <- (try board.(j).(i) with _ -> None)
+        done
+      done;
+
+      Ok t_board
     in
 
-    let horizontal_board = string_of_board game.board in
-    let vertical_board = game.board |> Board.transpose |> string_of_board in
+    let col_of_diagonal t_board =
+      for i = 0 to length_of_board do
+        for j = 0 to length_of_board do
+          t_board.(i).(j) <- (try board.(i).(j + i) with _ -> None)
+        done
+      done;
 
-    Dream.log "%s" horizontal_board;
-    Dream.log "%s" vertical_board;
-
-    (* let re1 = Re.Str.regexp "/(?<!x)x{2}(?!x)/" in *)
-    (* let re2 = Re.Str.regexp "/(?<!o)o{2}(?!o)/" in *)
-    (* let player_1_win = Re.Str.string_match re1 horizontal_board 0 in *)
-    (* let player_2_win = Re.Str.string_match re2 horizontal_board 0 in *)
-
-    (* if player_1_win then Some game.player_1 *)
-    (* else if player_2_win then Some game.player_2 *)
-    (* else None *)
-    Some game.player_1
-
-  let pretty game =
-    let pretty_id = "Game ID: #" ^ game.id ^ "\n" in
-    let pretty_board = Board.pretty game.board in
-    let pretty_player_1 = "Player 1: " ^ Player.pretty game.player_1 in
-    let pretty_player_2 = "Player 2: " ^ Player.pretty game.player_2 in
-    let next_piece =
-      piece_of_player ~player:game.next_move ~game |> Piece.pretty
-    in
-    let pretty_next_move =
-      "Next move: " ^ game.next_move ^ " (" ^ next_piece ^ ")\n"
+      Ok t_board
     in
 
-    pretty_id ^ pretty_player_1 ^ pretty_player_2 ^ pretty_board
-    ^ pretty_next_move
+    let row_of_diagonal t_board =
+      for i = 0 to length_of_board do
+        for j = 0 to length_of_board do
+          t_board.(i).(j) <- (try board.(j + i).(i) with _ -> None)
+        done
+      done;
+
+      Ok t_board
+    in
+
+    let check_row row =
+      let size = Array.length row - 1 in
+      let player_1_count = ref 0 in
+      let player_1_win = ref false in
+      let player_2_count = ref 0 in
+      let player_2_win = ref false in
+
+      for i = 0 to size do
+        match row.(i) with
+        | Some piece -> (
+            match piece with
+            | Piece.X ->
+                player_1_count := !player_1_count + 1;
+                if !player_2_count = 5 then player_2_win := true
+            | Piece.O ->
+                player_2_count := !player_2_count + 1;
+                if !player_1_count = 5 then player_1_win := true)
+        | None ->
+            if !player_1_count = 5 then player_1_win := true;
+            if !player_2_count = 5 then player_2_win := true;
+            player_1_count := 0;
+            player_2_count := 0
+      done;
+
+      if !player_1_win then Some game.player_1
+      else if !player_2_win then Some game.player_2
+      else None
+    in
+
+    let horizontal_board () = row_of_board board in
+
+    let vertical_board () =
+      match Board.transpose ~board ~f:row_of_col with
+      | Ok b -> row_of_board b
+      | _ -> failwith "wtf"
+    in
+
+    let diagonal_r_board () =
+      match Board.transpose ~board ~f:row_of_diagonal with
+      | Ok b -> row_of_board b
+      | _ -> failwith "wtf"
+    in
+
+    let diagonal_l_board () =
+      match Board.transpose ~board ~f:col_of_diagonal >>= row_of_col with
+      | Ok b -> row_of_board b
+      | _ -> failwith "wtf"
+    in
+
+    (* match check_row (horizontal_board ()) with *)
+    (* | Some player -> Some player *)
+    (* | None -> ( *)
+    (*     match check_row (vertical_board ()) with *)
+    (*     | Some player -> Some player *)
+    (*     | None -> ( *)
+    (*         match check_row (diagonal_l_board ()) with *)
+    (*         | Some player -> Some player *)
+    (*         | None -> ( *)
+    (*             match check_row (diagonal_r_board ()) with *)
+    (*             | Some player -> Some player *)
+    (*             | None -> None))) *)
+    let ( >>= ) = Option.bind in
+
+    check_row (horizontal_board ()) >>= fun _ ->
+    check_row (vertical_board ()) >>= fun _ ->
+    check_row (diagonal_l_board ()) >>= fun _ -> check_row (diagonal_r_board ())
+
+  let to_string game =
+    let string_of_id = "Game ID: #" ^ game.id ^ "\n" in
+    let string_of_board = Board.to_string game.board in
+    let string_of_player_1 =
+      "Player 1: " ^ Player.to_string game.player_1 ^ "\n"
+    in
+    let string_of_player_2 =
+      "Player 2: " ^ Player.to_string game.player_2 ^ "\n"
+    in
+    let string_of_next_piece =
+      match piece_of_player ~player:game.next_move ~game with
+      | Ok piece -> Piece.to_string piece
+      | _ -> ""
+    in
+
+    let game_info =
+      match game.winner with
+      | Some player -> "Player " ^ player ^ " has won the game!\n"
+      | None ->
+          "Next move: " ^ game.next_move ^ " (" ^ string_of_next_piece ^ ")\n"
+    in
+
+    string_of_id ^ string_of_player_1 ^ string_of_player_2 ^ string_of_board
+    ^ game_info
 
   let to_json game = game |> yojson_of_t |> Yojson.Safe.to_string
 end
-
-(* module Game_Error_Message = struct *)
-(*   type error_variants = *)
-(*     [> `Piece_Already_Placed of Coordinate.t *)
-(*     | `Piece_Out_Of_Bounds of Coordinate.t *)
-(*     | `Player_Not_Next of Player.t *)
-(*     | `Player_Not_Part_Of_Game of Player.t * string ] *)
-
-(*   type t = { error : error_variants; human_readable_error : string } *)
-(*   [@@deriving yojson] *)
-
-(*   let make ~error ~human_error = { error; human_readable_error = human_error } *)
-
-(*   let to_json error = error |> yojson_of_t |> Yojson.Safe.to_string *)
-
-(*   let respond_with_error ~error ~human_error = *)
-(*     make ~error ~human_error |> to_json |> Dream.json *)
-(* end *)
 
 module Games = Map.Make (String)
 
@@ -259,23 +315,23 @@ let play_game request =
         let coordinate = Coordinate.make ~x ~y in
 
         match Game.place_piece ~player ~coordinate ~game with
-        | Error (`Player_Not_Next player) ->
-            Dream.json ("It's not player " ^ player ^ "s turn")
         | Error (`Player_Not_Part_Of_Game (player, game_id)) ->
             Dream.json
               ("Player " ^ player ^ " is not a part of Game with ID #" ^ game_id)
+        | Error (`Player_Not_Next player) ->
+            Dream.json ("It's not player " ^ player ^ "s turn")
         | Error (`Piece_Already_Placed coordinate) ->
             Dream.json
               ("Piece on coordinates "
-              ^ Coordinate.pretty coordinate
+              ^ Coordinate.to_string coordinate
               ^ " has already been placed")
         | Error (`Piece_Out_Of_Bounds coordinate) ->
             Dream.json
               ("Piece on coordinates "
-              ^ Coordinate.pretty coordinate
+              ^ Coordinate.to_string coordinate
               ^ " would be placed out of bounds")
-        | Ok board' ->
-            game.board <- board';
+        | Ok board ->
+            game.board <- board;
             game.next_move <- Game.next_move game;
 
             let winner = Game.check_win game in
@@ -283,7 +339,12 @@ let play_game request =
 
             let () =
               match game.winner with
-              | Some _ -> State.games := State.remove_game game.id State.games
+              | Some winner ->
+                  State.games := State.remove_game game.id State.games;
+                  Dream.log
+                    "Player %s has won the game, game with ID #%s has been \
+                     removed"
+                    winner game.id
               | None -> ()
             in
 
@@ -302,16 +363,7 @@ let view_game_pretty request =
   let game = State.get_game game_id State.games in
   match game with
   | None -> Dream.json ("Game with ID #" ^ game_id ^ " does not exist")
-  | Some game -> Game.pretty game |> Dream.html
-
-let view_game_pretty_transpose request =
-  let game_id = Dream.param "game_id" request in
-  let game = State.get_game game_id State.games in
-  match game with
-  | None -> Dream.json ("Game with ID #" ^ game_id ^ " does not exist")
-  | Some game ->
-      game.board <- Board.transpose game.board;
-      Game.pretty game |> Dream.html
+  | Some game -> Game.to_string game |> Dream.html
 
 let () =
   Dream.run ~interface:"0.0.0.0"
@@ -324,7 +376,5 @@ let () =
          Dream.get "/view_game/:game_id" (fun request -> view_game request);
          Dream.get "/view_game/:game_id/pretty" (fun request ->
              view_game_pretty request);
-         Dream.get "/view_game/:game_id/pretty-transpose" (fun request ->
-             view_game_pretty_transpose request);
        ]
   @@ Dream.not_found
