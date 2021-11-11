@@ -120,9 +120,16 @@ module Game = struct
     let board = game.board in
     let length_of_board = Array.length game.board - 1 in
 
+    Dream.log "\n%s" (Board.to_string board);
+
     let row_of_board = Array.fold_left Array.append [||] in
 
     let row_of_col t_board =
+      (* |x|_|_|_|_|    |x|x|x|x|x| *)
+      (* |x|_|_|_|_|    |_|_|_|_|_| *)
+      (* |x|_|_|_|_| -> |_|_|_|_|_| *)
+      (* |x|_|_|_|_|    |_|_|_|_|_| *)
+      (* |x|_|_|_|_|    |_|_|_|_|_| *)
       for i = 0 to length_of_board do
         for j = 0 to length_of_board do
           t_board.(i).(j) <- (try board.(j).(i) with _ -> None)
@@ -132,20 +139,30 @@ module Game = struct
       Ok t_board
     in
 
-    let col_of_diagonal t_board =
+    let row_of_left_diagonal t_board =
+      (* |x|_|_|_|_|    |x|x|x|x|x| *)
+      (* |_|x|_|_|_|    |_|_|_|_|_| *)
+      (* |_|_|x|_|_| -> |_|_|_|_|_| *)
+      (* |_|_|_|x|_|    |_|_|_|_|_| *)
+      (* |_|_|_|_|x|    |_|_|_|_|_| *)
       for i = 0 to length_of_board do
         for j = 0 to length_of_board do
-          t_board.(i).(j) <- (try board.(i).(j + i) with _ -> None)
+          t_board.(i).(j) <- (try board.(i + j).(j) with _ -> None)
         done
       done;
 
       Ok t_board
     in
 
-    let row_of_diagonal t_board =
-      for i = 0 to length_of_board do
-        for j = 0 to length_of_board do
-          t_board.(i).(j) <- (try board.(j + i).(i) with _ -> None)
+    let row_of_right_diagonal t_board =
+      (* |_|_|_|_|x|    |_|_|_|_|_| *)
+      (* |_|-|_|x|_|    |_|_|_|_|_| *)
+      (* |_|_|x|_|_| -> |_|_|_|_|_| *)
+      (* |_|x|_|_|_|    |_|_|_|_|_| *)
+      (* |x|_|_|_|_|    |x|x|x|x|x| *)
+      for j = 0 to length_of_board do
+        for i = 0 to length_of_board do
+          t_board.(i).(j) <- (try board.(i - j).(j) with _ -> None)
         done
       done;
 
@@ -184,40 +201,36 @@ module Game = struct
     let horizontal_board () = row_of_board board in
 
     let vertical_board () =
-      match Board.transpose ~board ~f:row_of_col with
+      match Board.transpose ~f:row_of_col ~board with
       | Ok b -> row_of_board b
       | _ -> failwith "wtf"
     in
 
-    let diagonal_r_board () =
-      match Board.transpose ~board ~f:row_of_diagonal with
+    let right_diagonal_board () =
+      match Board.transpose ~f:row_of_right_diagonal ~board with
       | Ok b -> row_of_board b
       | _ -> failwith "wtf"
     in
 
-    let diagonal_l_board () =
-      match Board.transpose ~board ~f:col_of_diagonal >>= row_of_col with
+    let left_diagonal_board () =
+      match Board.transpose ~f:row_of_left_diagonal ~board with
       | Ok b -> row_of_board b
       | _ -> failwith "wtf"
     in
 
-    (* match check_row (horizontal_board ()) with *)
-    (* | Some player -> Some player *)
-    (* | None -> ( *)
-    (*     match check_row (vertical_board ()) with *)
-    (*     | Some player -> Some player *)
-    (*     | None -> ( *)
-    (*         match check_row (diagonal_l_board ()) with *)
-    (*         | Some player -> Some player *)
-    (*         | None -> ( *)
-    (*             match check_row (diagonal_r_board ()) with *)
-    (*             | Some player -> Some player *)
-    (*             | None -> None))) *)
-    let ( >>= ) = Option.bind in
-
-    check_row (horizontal_board ()) >>= fun _ ->
-    check_row (vertical_board ()) >>= fun _ ->
-    check_row (diagonal_l_board ()) >>= fun _ -> check_row (diagonal_r_board ())
+    (* eeeh... *)
+    match check_row (horizontal_board ()) with
+    | Some player -> Some player
+    | None -> (
+        match check_row (vertical_board ()) with
+        | Some player -> Some player
+        | None -> (
+            match check_row (left_diagonal_board ()) with
+            | Some player -> Some player
+            | None -> (
+                match check_row (right_diagonal_board ()) with
+                | Some player -> Some player
+                | None -> None)))
 
   let to_string game =
     let string_of_id = "Game ID: #" ^ game.id ^ "\n" in
@@ -363,7 +376,7 @@ let view_game_pretty request =
   let game = State.get_game game_id State.games in
   match game with
   | None -> Dream.json ("Game with ID #" ^ game_id ^ " does not exist")
-  | Some game -> Game.to_string game |> Dream.html
+  | Some game -> Game.to_string game |> Dream.json
 
 let () =
   Dream.run ~interface:"0.0.0.0"

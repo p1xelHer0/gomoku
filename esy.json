@@ -3,7 +3,7 @@
     "start": "./_esy/default/build/default/app.exe",
     "build": "dune build",
     "test": "dune build @test/runtest -f"
-  },  
+  },
   "dependencies": {
     "@opam/dream": "1.0.0~alpha2",
     "@opam/dune": "^2.0",
@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@opam/alcotest": "^1.5.0",
+    "@opam/merlin": "*",
     "@opam/ocaml-lsp-server": "*",
     "@opam/ocamlformat": "*",
     "@opam/ocamlformat-rpc": "*",
@@ -23,8 +24,6 @@
     "esy-openssl": "esy-packages/esy-openssl#619ae2d46ca981ec26ab3287487ad98b157a01d1"
   },
   "esy": {
-    "build": [
-      "dune build --root . ./app.exe"
-    ]
+    "build": ["dune build --root . ./app.exe"]
   }
 }
