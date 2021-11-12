@@ -12,8 +12,6 @@
     "ocaml": "4.12.x"
   },
   "devDependencies": {
-    "@opam/alcotest": "^1.5.0",
-    "@opam/merlin": "*",
     "@opam/ocaml-lsp-server": "*",
     "@opam/ocamlformat": "*",
     "@opam/ocamlformat-rpc": "*",

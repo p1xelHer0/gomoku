@@ -1,5 +1,5 @@
 {
-  "checksum": "e72ddf94e4c2381a437e49be4a08f6a9",
+  "checksum": "6ce0c0b014f455a320091e1b2bbe0efa",
   "root": "dream-gomoku@link-dev:./esy.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -83,9 +83,7 @@
         "@opam/utop@opam:2.8.0@76625c33",
         "@opam/ocamlformat-rpc@opam:0.19.0@f32c0739",
         "@opam/ocamlformat@opam:0.19.0@d7e55490",
-        "@opam/ocaml-lsp-server@opam:1.8.3@b64dff17",
-        "@opam/merlin@opam:4.3.1-412@034497b0",
-        "@opam/alcotest@opam:1.5.0@c3a8eb69"
+        "@opam/ocaml-lsp-server@opam:1.8.3@b64dff17"
       ]
     },
     "@opam/zed@opam:3.1.0@6e750e3e": {
@@ -997,20 +995,20 @@
         "ocaml@4.12.0@d41d8cd9", "@opam/dune@opam:2.9.1@1e504822"
       ]
     },
-    "@opam/ocplib-endian@opam:1.1@84c1ca88": {
-      "id": "@opam/ocplib-endian@opam:1.1@84c1ca88",
+    "@opam/ocplib-endian@opam:1.2@008dc942": {
+      "id": "@opam/ocplib-endian@opam:1.2@008dc942",
       "name": "@opam/ocplib-endian",
-      "version": "opam:1.1",
+      "version": "opam:1.2",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/de/dedf4d69c1b87b3c6c7234f632399285#md5:dedf4d69c1b87b3c6c7234f632399285",
-          "archive:https://github.com/OCamlPro/ocplib-endian/archive/1.1.tar.gz#md5:dedf4d69c1b87b3c6c7234f632399285"
+          "archive:https://opam.ocaml.org/cache/md5/8d/8d5492eeb7c6815ade72a7415ea30949#md5:8d5492eeb7c6815ade72a7415ea30949",
+          "archive:https://github.com/OCamlPro/ocplib-endian/archive/refs/tags/1.2.tar.gz#md5:8d5492eeb7c6815ade72a7415ea30949"
         ],
         "opam": {
           "name": "ocplib-endian",
-          "version": "1.1",
-          "path": "esy.lock/opam/ocplib-endian.1.1"
+          "version": "1.2",
+          "path": "esy.lock/opam/ocplib-endian.1.2"
         }
       },
       "overrides": [],
@@ -1555,36 +1553,6 @@
         "@opam/result@opam:1.5@1c6a6533", "@opam/dune@opam:2.9.1@1e504822"
       ]
     },
-    "@opam/merlin@opam:4.3.1-412@034497b0": {
-      "id": "@opam/merlin@opam:4.3.1-412@034497b0",
-      "name": "@opam/merlin",
-      "version": "opam:4.3.1-412",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/59/59030191e223ac5daf9cf1e406c60275cfa5e521d0414b6e77394318e4fa022a#sha256:59030191e223ac5daf9cf1e406c60275cfa5e521d0414b6e77394318e4fa022a",
-          "archive:https://github.com/ocaml/merlin/releases/download/v4.3.1-412/merlin-v4.3.1-412.tbz#sha256:59030191e223ac5daf9cf1e406c60275cfa5e521d0414b6e77394318e4fa022a"
-        ],
-        "opam": {
-          "name": "merlin",
-          "version": "4.3.1-412",
-          "path": "esy.lock/opam/merlin.4.3.1-412"
-        }
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.12.0@d41d8cd9", "@opam/yojson@opam:1.7.0@69d87312",
-        "@opam/result@opam:1.5@1c6a6533", "@opam/dune@opam:2.9.1@1e504822",
-        "@opam/dot-merlin-reader@opam:4.1@84436e1c",
-        "@opam/csexp@opam:1.5.1@8a8fb3a7", "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.12.0@d41d8cd9", "@opam/yojson@opam:1.7.0@69d87312",
-        "@opam/result@opam:1.5@1c6a6533", "@opam/dune@opam:2.9.1@1e504822",
-        "@opam/dot-merlin-reader@opam:4.1@84436e1c",
-        "@opam/csexp@opam:1.5.1@8a8fb3a7"
-      ]
-    },
     "@opam/menhirSdk@opam:20211012@361dec19": {
       "id": "@opam/menhirSdk@opam:20211012@361dec19",
       "name": "@opam/menhirSdk",
@@ -1816,7 +1784,7 @@
       "dependencies": [
         "ocaml@4.12.0@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
         "@opam/result@opam:1.5@1c6a6533",
-        "@opam/ocplib-endian@opam:1.1@84c1ca88",
+        "@opam/ocplib-endian@opam:1.2@008dc942",
         "@opam/ocaml-syntax-shims@opam:1.0.0@9f361fbb",
         "@opam/mmap@opam:1.1.0@a98cdc3b",
         "@opam/dune-configurator@opam:2.9.1@b7cf7a02",
@@ -1829,7 +1797,7 @@
       "devDependencies": [
         "ocaml@4.12.0@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
         "@opam/result@opam:1.5@1c6a6533",
-        "@opam/ocplib-endian@opam:1.1@84c1ca88",
+        "@opam/ocplib-endian@opam:1.2@008dc942",
         "@opam/ocaml-syntax-shims@opam:1.0.0@9f361fbb",
         "@opam/mmap@opam:1.1.0@a98cdc3b",
         "@opam/dune-configurator@opam:2.9.1@b7cf7a02",
@@ -3061,43 +3029,6 @@
         "ocaml@4.12.0@d41d8cd9", "@opam/result@opam:1.5@1c6a6533",
         "@opam/dune@opam:2.9.1@1e504822",
         "@opam/bigstringaf@opam:0.8.0@6a362afb"
-      ]
-    },
-    "@opam/alcotest@opam:1.5.0@c3a8eb69": {
-      "id": "@opam/alcotest@opam:1.5.0@c3a8eb69",
-      "name": "@opam/alcotest",
-      "version": "opam:1.5.0",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/54/54281907e02d78995df246dc2e10ed182828294ad2059347a1e3a13354848f6c#sha256:54281907e02d78995df246dc2e10ed182828294ad2059347a1e3a13354848f6c",
-          "archive:https://github.com/mirage/alcotest/releases/download/1.5.0/alcotest-js-1.5.0.tbz#sha256:54281907e02d78995df246dc2e10ed182828294ad2059347a1e3a13354848f6c"
-        ],
-        "opam": {
-          "name": "alcotest",
-          "version": "1.5.0",
-          "path": "esy.lock/opam/alcotest.1.5.0"
-        }
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.12.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
-        "@opam/stdlib-shims@opam:0.3.0@0d088929",
-        "@opam/re@opam:1.10.3@0585c65d",
-        "@opam/ocaml-syntax-shims@opam:1.0.0@9f361fbb",
-        "@opam/fmt@opam:0.9.0@87213963", "@opam/dune@opam:2.9.1@1e504822",
-        "@opam/cmdliner@opam:1.0.4@93208aac",
-        "@opam/astring@opam:0.8.5@1300cee8",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.12.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
-        "@opam/stdlib-shims@opam:0.3.0@0d088929",
-        "@opam/re@opam:1.10.3@0585c65d",
-        "@opam/ocaml-syntax-shims@opam:1.0.0@9f361fbb",
-        "@opam/fmt@opam:0.9.0@87213963", "@opam/dune@opam:2.9.1@1e504822",
-        "@opam/cmdliner@opam:1.0.4@93208aac",
-        "@opam/astring@opam:0.8.5@1300cee8"
       ]
     },
     "@esy-ocaml/substs@0.0.1@d41d8cd9": {
