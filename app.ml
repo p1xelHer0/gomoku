@@ -316,57 +316,52 @@ let end_game request =
 
 let play_game request =
   let game_id = Dream.param "game_id" request in
-  let game = State.get_game game_id State.games in
-  match game with
+  match State.get_game game_id State.games with
   | None -> Dream.json ("Game with ID #" ^ game_id ^ " doest not exist")
   | Some game -> (
-      try
-        let%lwt body = Dream.body request in
+      match game.winner with
+      | None -> (
+          try
+            let%lwt body = Dream.body request in
 
-        let player_move_body =
-          body |> Yojson.Safe.from_string |> player_move_body_of_yojson
-        in
-
-        let { player; x; y } = player_move_body in
-
-        let coordinate = Coordinate.make ~x ~y in
-
-        match Game.place_piece ~player ~coordinate ~game with
-        | Error (`Player_Not_Part_Of_Game (player, game_id)) ->
-            Dream.json
-              ("Player " ^ player ^ " is not a part of Game with ID #" ^ game_id)
-        | Error (`Player_Not_Next player) ->
-            Dream.json ("It's not player " ^ player ^ "s turn")
-        | Error (`Piece_Already_Placed coordinate) ->
-            Dream.json
-              ("Piece on coordinates "
-              ^ Coordinate.to_string coordinate
-              ^ " has already been placed")
-        | Error (`Piece_Out_Of_Bounds coordinate) ->
-            Dream.json
-              ("Piece on coordinates "
-              ^ Coordinate.to_string coordinate
-              ^ " would be placed out of bounds")
-        | Ok board ->
-            game.board <- board;
-            game.next_move <- Game.next_move game;
-
-            let winner = Game.check_win game in
-            game.winner <- winner;
-
-            let () =
-              match game.winner with
-              | Some winner ->
-                  State.games := State.remove_game game.id State.games;
-                  Dream.log
-                    "Player %s has won the game, game with ID #%s has been \
-                     removed"
-                    winner game.id
-              | None -> ()
+            let player_move_body =
+              body |> Yojson.Safe.from_string |> player_move_body_of_yojson
             in
 
-            game |> Game.to_json |> Dream.json
-      with _ -> Dream.json "Invalid PUT data for play_game")
+            let { player; x; y } = player_move_body in
+
+            let coordinate = Coordinate.make ~x ~y in
+
+            match Game.place_piece ~player ~coordinate ~game with
+            | Error (`Player_Not_Part_Of_Game (player, game_id)) ->
+                Dream.json
+                  ("Player " ^ player ^ " is not a part of Game with ID #"
+                 ^ game_id)
+            | Error (`Player_Not_Next player) ->
+                Dream.json ("It's not player " ^ player ^ "s turn")
+            | Error (`Piece_Already_Placed coordinate) ->
+                Dream.json
+                  ("Piece on coordinates "
+                  ^ Coordinate.to_string coordinate
+                  ^ " has already been placed")
+            | Error (`Piece_Out_Of_Bounds coordinate) ->
+                Dream.json
+                  ("Piece on coordinates "
+                  ^ Coordinate.to_string coordinate
+                  ^ " would be placed out of bounds")
+            | Ok board ->
+                game.board <- board;
+                game.next_move <- Game.next_move game;
+
+                let winner = Game.check_win game in
+                game.winner <- winner;
+
+                game |> Game.to_json |> Dream.json
+          with _ -> Dream.json "Invalid PUT data for play_game")
+      | Some winner ->
+          Dream.json
+            ("Game with ID #" ^ game.id ^ " has already been won by player "
+           ^ winner))
 
 let view_game request =
   let game_id = Dream.param "game_id" request in

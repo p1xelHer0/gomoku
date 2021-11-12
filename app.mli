@@ -97,3 +97,15 @@ module Game : sig
 
   val to_json : t -> string
 end
+
+module Games : Map.S with type key = string
+
+module State : sig
+  val games : Game.t Games.t ref
+
+  val add_game : string -> Game.t -> Game.t Games.t -> Game.t Games.t
+
+  val remove_game : string -> Game.t Games.t ref -> Game.t Games.t
+
+  val get_game : string -> Game.t Games.t ref -> Game.t option
+end
