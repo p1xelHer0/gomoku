@@ -9,7 +9,7 @@ RUN npm install esy
 
 # Install dependencies.
 ADD esy.* ./
-# RUN [ -f esy.lock ] || node_modules/.bin/esy solve
+RUN [ -f esy.lock ] || node_modules/.bin/esy solve
 RUN node_modules/.bin/esy fetch
 RUN node_modules/.bin/esy build-dependencies
 
