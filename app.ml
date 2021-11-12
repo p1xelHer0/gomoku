@@ -48,7 +48,7 @@ module Board = struct
       Error (`Board_Size_Too_Big (size, min_size, max_size))
     else if size < min_size then
       Error (`Board_Size_Too_Small (size, min_size, max_size))
-    else Ok (Array.make_matrix size size (None : Piece.t option) : t)
+    else Ok (Array.make_matrix size size None)
 
   let get_piece ~(coordinate : Coordinate.t) ~(board : t) =
     try board.(coordinate.y).(coordinate.x) with _ -> None
@@ -120,8 +120,6 @@ module Game = struct
     let board = game.board in
     let length_of_board = Array.length game.board - 1 in
 
-    Dream.log "\n%s" (Board.to_string board);
-
     let append_with_none array_1 array_2 =
       Array.append [| None |] array_2 |> Array.append array_1
     in
@@ -134,9 +132,9 @@ module Game = struct
       (* |x|_|_|_|_| -> |_|_|_|_|_| *)
       (* |x|_|_|_|_|    |_|_|_|_|_| *)
       (* |x|_|_|_|_|    |_|_|_|_|_| *)
-      for i = 0 to length_of_board do
-        for j = 0 to length_of_board do
-          t_board.(i).(j) <- (try board.(j).(i) with _ -> None)
+      for y = 0 to length_of_board do
+        for x = 0 to length_of_board do
+          t_board.(y).(x) <- (try board.(x).(y) with _ -> None)
         done
       done;
 
@@ -149,9 +147,9 @@ module Game = struct
       (* |_|_|x|_|_| -> |_|_|_|_|_| *)
       (* |_|_|_|x|_|    |_|_|_|_|_| *)
       (* |_|_|_|_|x|    |_|_|_|_|_| *)
-      for i = 0 to length_of_board do
-        for j = 0 to length_of_board do
-          t_board.(i).(j) <- (try board.(i + j).(j) with _ -> None)
+      for y = 0 to length_of_board do
+        for x = 0 to length_of_board do
+          t_board.(y).(x) <- (try board.(y + x).(x) with _ -> None)
         done
       done;
 
@@ -164,9 +162,9 @@ module Game = struct
       (* |_|_|x|_|_| -> |_|_|_|_|_| *)
       (* |_|x|_|_|_|    |_|_|_|_|_| *)
       (* |x|_|_|_|_|    |x|x|x|x|x| *)
-      for j = 0 to length_of_board do
-        for i = 0 to length_of_board do
-          t_board.(i).(j) <- (try board.(i - j).(j) with _ -> None)
+      for y = 0 to length_of_board do
+        for x = 0 to length_of_board do
+          t_board.(x).(y) <- (try board.(x - y).(y) with _ -> None)
         done
       done;
 
@@ -186,9 +184,11 @@ module Game = struct
             match piece with
             | Piece.X ->
                 player_1_count := !player_1_count + 1;
+                player_2_count := 0;
                 if !player_2_count = 5 then player_2_win := true
             | Piece.O ->
                 player_2_count := !player_2_count + 1;
+                player_1_count := 0;
                 if !player_1_count = 5 then player_1_win := true)
         | None ->
             if !player_1_count = 5 then player_1_win := true;
@@ -267,6 +267,8 @@ end
 module Games = Map.Make (String)
 
 module State = struct
+  type t = Game.t Games.t
+
   let games = ref Games.empty
 
   let add_game id game games = Games.add id game games
@@ -352,9 +354,7 @@ let play_game request =
             | Ok board ->
                 game.board <- board;
                 game.next_move <- Game.next_move game;
-
-                let winner = Game.check_win game in
-                game.winner <- winner;
+                game.winner <- Game.check_win game;
 
                 game |> Game.to_json |> Dream.json
           with _ -> Dream.json "Invalid PUT data for play_game")

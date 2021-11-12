@@ -101,11 +101,13 @@ end
 module Games : Map.S with type key = string
 
 module State : sig
-  val games : Game.t Games.t ref
+  type t
 
-  val add_game : string -> Game.t -> Game.t Games.t -> Game.t Games.t
+  val games : t ref
 
-  val remove_game : string -> Game.t Games.t ref -> Game.t Games.t
+  val add_game : string -> Game.t -> t -> t
 
-  val get_game : string -> Game.t Games.t ref -> Game.t option
+  val remove_game : string -> t ref -> t
+
+  val get_game : string -> t ref -> Game.t option
 end
