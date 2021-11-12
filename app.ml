@@ -184,15 +184,13 @@ module Game = struct
             match piece with
             | Piece.X ->
                 player_1_count := !player_1_count + 1;
+                if !player_1_count = 5 then player_1_win := true
                 player_2_count := 0;
-                if !player_2_count = 5 then player_2_win := true
             | Piece.O ->
                 player_2_count := !player_2_count + 1;
+                if !player_2_count = 5 then player_2_win := true)
                 player_1_count := 0;
-                if !player_1_count = 5 then player_1_win := true)
         | None ->
-            if !player_1_count = 5 then player_1_win := true;
-            if !player_2_count = 5 then player_2_win := true;
             player_1_count := 0;
             player_2_count := 0
       done;
