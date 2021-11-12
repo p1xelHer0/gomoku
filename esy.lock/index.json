@@ -1,5 +1,5 @@
 {
-  "checksum": "6ce0c0b014f455a320091e1b2bbe0efa",
+  "checksum": "cf8054e30b76a5ab7a8550396a1fc49c",
   "root": "dream-gomoku@link-dev:./esy.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -32,19 +32,19 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-openssl@archive:https://www.openssl.org/source/openssl-1.1.1l.tar.gz#sha256:0b7a3e5e59c34827fe0c3a74b7ec8baef302b98fa80088d7f9153aa16fa76bd1@d2b1c9f1": {
+    "esy-openssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz#sha1:33324ff957edaae8ae575817b456320378da46ff@41b6fb3d": {
       "id":
-        "esy-openssl@archive:https://www.openssl.org/source/openssl-1.1.1l.tar.gz#sha256:0b7a3e5e59c34827fe0c3a74b7ec8baef302b98fa80088d7f9153aa16fa76bd1@d2b1c9f1",
+        "esy-openssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz#sha1:33324ff957edaae8ae575817b456320378da46ff@41b6fb3d",
       "name": "esy-openssl",
       "version":
-        "archive:https://www.openssl.org/source/openssl-1.1.1l.tar.gz#sha256:0b7a3e5e59c34827fe0c3a74b7ec8baef302b98fa80088d7f9153aa16fa76bd1",
+        "archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz#sha1:33324ff957edaae8ae575817b456320378da46ff",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://www.openssl.org/source/openssl-1.1.1l.tar.gz#sha256:0b7a3e5e59c34827fe0c3a74b7ec8baef302b98fa80088d7f9153aa16fa76bd1"
+          "archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz#sha1:33324ff957edaae8ae575817b456320378da46ff"
         ]
       },
-      "overrides": [ "esy.lock/overrides/d2b1c9f139f83685b7ed6db48df6a440" ],
+      "overrides": [ "esy.lock/overrides/41b6fb3db953254b0cb4c5e1b546f3f4" ],
       "dependencies": [
         "@opam/conf-pkg-config@opam:2@85f8644d",
         "@opam/conf-autoconf@github:esy-packages/esy-autoconf:package.json#fb93edf@d41d8cd9"
@@ -2589,7 +2589,7 @@
         }
       ],
       "dependencies": [
-        "esy-openssl@archive:https://www.openssl.org/source/openssl-1.1.1l.tar.gz#sha256:0b7a3e5e59c34827fe0c3a74b7ec8baef302b98fa80088d7f9153aa16fa76bd1@d2b1c9f1",
+        "esy-openssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz#sha1:33324ff957edaae8ae575817b456320378da46ff@41b6fb3d",
         "@opam/conf-pkg-config@opam:2@85f8644d",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
