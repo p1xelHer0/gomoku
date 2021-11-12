@@ -1,7 +1,7 @@
 # Gomoku
 
 ```
-Base URL: http//gomoku.fly.dev/
+Base URL: http://gomoku.fly.dev/
 ```
 
 ## Game JSON
