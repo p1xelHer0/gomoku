@@ -64,15 +64,15 @@ URL: :url/end_game/:game_id
 ## View an existing game
 
 ```
-- Method: GET
+Method: GET
 
-- URL: :url/view_game/:game_id
+URL: :url/view_game/:game_id
 ```
 
 ## View an existing game pretty
 
 ```
-- Method: GET
+Method: GET
 
-- URL: :url/view_game/:game_id/pretty
+URL: :url/view_game/:game_id/pretty
 ```
