@@ -7,7 +7,7 @@ Base URL: http//gomoku.fly.dev/
 ## Game JSON
 
 `player_1` will always be assigned to piece `"x"`
-`player_1` will always be assigned to piece `"o"`
+`player_2` will always be assigned to piece `"o"`
 Empty pieces are considered `null`
 ```
 {
