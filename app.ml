@@ -122,7 +122,11 @@ module Game = struct
 
     Dream.log "\n%s" (Board.to_string board);
 
-    let row_of_board = Array.fold_left Array.append [||] in
+    let append_with_none array_1 array_2 =
+      Array.append [| None |] array_2 |> Array.append array_1
+    in
+
+    let row_of_board = Array.fold_left append_with_none [||] in
 
     let row_of_col t_board =
       (* |x|_|_|_|_|    |x|x|x|x|x| *)
