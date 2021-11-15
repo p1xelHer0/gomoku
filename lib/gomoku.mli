@@ -1,5 +1,5 @@
 module Coordinate : sig
-  type t
+  type t = { x : int; y : int }
 
   val make : x:int -> y:int -> t
 
@@ -61,7 +61,14 @@ module Board : sig
 end
 
 module Game : sig
-  type t
+  type t = {
+    id : string;
+    mutable board : Board.t;
+    mutable next_move : string;
+    mutable winner : string option;
+    player_1 : string;
+    player_2 : string;
+  }
 
   val make :
     size:int ->
@@ -96,18 +103,4 @@ module Game : sig
   val to_string : t -> string
 
   val to_json : t -> string
-end
-
-module Games : Map.S with type key = string
-
-module State : sig
-  type t
-
-  val games : t ref
-
-  val add_game : string -> Game.t -> t -> t
-
-  val remove_game : string -> t ref -> t
-
-  val get_game : string -> t ref -> Game.t option
 end

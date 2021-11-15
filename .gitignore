@@ -9,14 +9,13 @@
 *.install
 *.o
 
-_build/
-
 *.byte
 *.native
 
+_build/
 .merlin
 
-*.install
+_opam/
 
 _esy
 _export/
@@ -25,8 +24,8 @@ node_modules/
 npm-debug.log
 yarn-error.log
 
-_opam/
-
 scratch/
 
 .vscode/
+
+.DS_Store

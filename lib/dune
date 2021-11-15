@@ -1,0 +1,5 @@
+(library
+ (name gomoku)
+ (libraries rresult)
+ (preprocess
+  (pps ppx_yojson_conv)))

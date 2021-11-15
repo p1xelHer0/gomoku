@@ -1,7 +1,9 @@
-(executable
- (name app)
- (libraries dream rresult)
- (preprocess
-  (pps lwt_ppx ppx_yojson_conv)))
+(env
+ (dev
+  (flags
+   (:standard -open StdLabels -w +A-48-42-44 -warn-error +A-3)))
+ (release
+  (flags
+   (:standard -O3))))
 
-(data_only_dirs _esy esy.lock lib node_modules)
+(data_only_dirs _esy esy.lock node_modules)

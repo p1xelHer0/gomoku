@@ -1,5 +1,5 @@
 {
-  "dependencies": {
+  "devDependencies": {
     "esy": "0.6.11"
   }
 }

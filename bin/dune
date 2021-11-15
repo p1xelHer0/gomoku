@@ -1,0 +1,6 @@
+(executable
+ (name dream_gomoku)
+ (public_name dream_gomoku)
+ (libraries dream gomoku)
+ (preprocess
+  (pps lwt_ppx ppx_yojson_conv)))
