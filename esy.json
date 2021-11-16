@@ -1,27 +1,38 @@
 {
+  "name": "gomoku",
+  "esy": {
+    "build": "dune build -p #{self.name}",
+    "buildDev": "dune build --root . --only-package #{self.name}",
+    "buildEnv": { "ODOC_SYNTAX": "ml" }
+  },
   "scripts": {
-    "start": "./_esy/default/build/default/app.exe",
-    "build": "dune build",
-    "test": "dune build @test/runtest -f"
+    "run": "./_esy/default/build/default/bin/main.exe",
+    "test": "dune build @test/runtest -f",
+    "test:watch": "dune build @test/runtest -fw --no-buffer",
+    "format": "dune build @fmt --auto-promote",
+    "doc": "dune build @doc",
+    "doc-path": "echo #{self.target_dir}/default/_doc/_html/index.html",
+    "utop": "dune utop lib -- -implicit-bindings"
   },
   "dependencies": {
     "@opam/dream": "1.0.0~alpha2",
-    "@opam/dune": "^2.0",
-    "@opam/ppx_yojson_conv": "*",
+    "@opam/dune": "^2.9.1",
+    "@opam/ppx_yojson_conv": "v0.14.0",
     "@opam/rresult": "^0.7.0",
     "ocaml": "4.12.x"
   },
   "devDependencies": {
-    "@opam/ocaml-lsp-server": "*",
-    "@opam/ocamlformat": "*",
-    "@opam/ocamlformat-rpc": "*",
+    "@opam/alcotest": "^1.5.0",
+    "@opam/dot-merlin-reader": "*",
+    "@opam/merlin": "*",
+    "@opam/odoc": "*",
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam",
+    "@opam/ocamlformat": "0.19.0",
+    "@opam/ocamlformat-rpc": "0.19.0",
     "@opam/utop": "*"
   },
   "resolutions": {
     "@opam/conf-libev": "esy-packages/libev:package.json#0b5eb6685b688649045aceac55dc559f6f21b829",
     "esy-openssl": "esy-packages/esy-openssl#619ae2d46ca981ec26ab3287487ad98b157a01d1"
-  },
-  "esy": {
-    "build": ["dune build --root . ./app.exe"]
   }
 }
