@@ -1,13 +1,13 @@
 open Gomoku
 
-type player_move_body = { player : string; x : int; y : int }
-[@@deriving of_yojson]
-
 type new_game_body = {
   size : int; [@default 20]
   player_1 : string;
   player_2 : string;
 }
+[@@deriving of_yojson]
+
+type player_move_body = { player : string; x : int; y : int }
 [@@deriving of_yojson]
 
 let parse_new_game body =

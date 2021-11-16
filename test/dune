@@ -1,2 +1,3 @@
-(test
- (name gomoku))
+(tests
+ (names gomoku_test)
+ (libraries alcotest gomoku yojson))

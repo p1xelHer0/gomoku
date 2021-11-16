@@ -1,5 +1,5 @@
 {
-  "checksum": "f84dd65807d7a7afd40772ffc79830ca",
+  "checksum": "cb562f2efae94357ae919d3d7c0b458c",
   "root": "gomoku@link-dev:./esy.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -45,11 +45,12 @@
         "@opam/dream@opam:1.0.0~alpha2@85fde1c6"
       ],
       "devDependencies": [
-        "@opam/utop@opam:2.8.0@76625c33", "@opam/odoc@opam:2.0.0@17b793a5",
+        "@opam/utop@opam:2.8.0@1d94c18c", "@opam/odoc@opam:2.0.0@17b793a5",
         "@opam/ocamlformat-rpc@opam:0.19.0@f32c0739",
         "@opam/ocamlformat@opam:0.19.0@d7e55490",
         "@opam/ocaml-lsp-server@github:ocaml/ocaml-lsp:ocaml-lsp-server.opam#584808a94291597722599a4a9dedaf2e797a8f95@d41d8cd9",
         "@opam/merlin@opam:4.3.1-412@034497b0",
+        "@opam/dot-merlin-reader@opam:4.1@84436e1c",
         "@opam/alcotest@opam:1.5.0@c3a8eb69"
       ]
     },
@@ -234,8 +235,8 @@
       ],
       "devDependencies": [ "ocaml@4.12.0@d41d8cd9" ]
     },
-    "@opam/utop@opam:2.8.0@76625c33": {
-      "id": "@opam/utop@opam:2.8.0@76625c33",
+    "@opam/utop@opam:2.8.0@1d94c18c": {
+      "id": "@opam/utop@opam:2.8.0@1d94c18c",
       "name": "@opam/utop",
       "version": "opam:2.8.0",
       "source": {
@@ -487,8 +488,8 @@
         "ocaml@4.12.0@d41d8cd9", "@opam/dune@opam:2.9.1@1e504822"
       ]
     },
-    "@opam/stdio@opam:v0.14.0@a5affb43": {
-      "id": "@opam/stdio@opam:v0.14.0@a5affb43",
+    "@opam/stdio@opam:v0.14.0@015afbe4": {
+      "id": "@opam/stdio@opam:v0.14.0@015afbe4",
       "name": "@opam/stdio",
       "version": "opam:v0.14.0",
       "source": {
@@ -1196,7 +1197,7 @@
       "dependencies": [
         "ocaml@4.12.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
         "@opam/uuseg@opam:14.0.0@7d21466b",
-        "@opam/stdio@opam:v0.14.0@a5affb43", "@opam/re@opam:1.10.3@0585c65d",
+        "@opam/stdio@opam:v0.14.0@015afbe4", "@opam/re@opam:1.10.3@0585c65d",
         "@opam/odoc-parser@opam:0.9.0@53bf0585",
         "@opam/ocp-indent@opam:1.8.1@e32a3c50",
         "@opam/ocamlformat-rpc-lib@opam:0.19.0@125cf11d",
@@ -1215,7 +1216,7 @@
       "devDependencies": [
         "ocaml@4.12.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
         "@opam/uuseg@opam:14.0.0@7d21466b",
-        "@opam/stdio@opam:v0.14.0@a5affb43", "@opam/re@opam:1.10.3@0585c65d",
+        "@opam/stdio@opam:v0.14.0@015afbe4", "@opam/re@opam:1.10.3@0585c65d",
         "@opam/odoc-parser@opam:0.9.0@53bf0585",
         "@opam/ocp-indent@opam:1.8.1@e32a3c50",
         "@opam/ocamlformat-rpc-lib@opam:0.19.0@125cf11d",
@@ -1251,7 +1252,7 @@
       "dependencies": [
         "ocaml@4.12.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
         "@opam/uuseg@opam:14.0.0@7d21466b",
-        "@opam/stdio@opam:v0.14.0@a5affb43", "@opam/re@opam:1.10.3@0585c65d",
+        "@opam/stdio@opam:v0.14.0@015afbe4", "@opam/re@opam:1.10.3@0585c65d",
         "@opam/odoc-parser@opam:0.9.0@53bf0585",
         "@opam/ocp-indent@opam:1.8.1@e32a3c50",
         "@opam/menhirSdk@opam:20211012@361dec19",
@@ -1269,7 +1270,7 @@
       "devDependencies": [
         "ocaml@4.12.0@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
         "@opam/uuseg@opam:14.0.0@7d21466b",
-        "@opam/stdio@opam:v0.14.0@a5affb43", "@opam/re@opam:1.10.3@0585c65d",
+        "@opam/stdio@opam:v0.14.0@015afbe4", "@opam/re@opam:1.10.3@0585c65d",
         "@opam/odoc-parser@opam:0.9.0@53bf0585",
         "@opam/ocp-indent@opam:1.8.1@e32a3c50",
         "@opam/menhirSdk@opam:20211012@361dec19",

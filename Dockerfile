@@ -5,7 +5,8 @@ RUN apt-get install -y curl git libpq-dev m4 npm unzip
 
 WORKDIR /build
 
-RUN npm install esy
+ADD package-lock.json ./
+RUN npm ci
 
 # Install dependencies.
 ADD esy.* ./
@@ -23,6 +24,6 @@ FROM debian:stable-slim as run
 RUN apt-get update
 RUN apt-get install -y libev4 libpq5 libssl1.1
 
-COPY --from=build build/_esy/default/build/default/app.exe /bin/app
+COPY --from=build build/_esy/default/build/default/bin/main.exe /bin/app
 
 ENTRYPOINT /bin/app

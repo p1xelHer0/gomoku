@@ -1,15 +1,14 @@
 {
-  "name": "dream_gomoku",
+  "name": "gomoku",
   "esy": {
     "build": "dune build -p #{self.name}",
     "buildDev": "dune build --root . --only-package #{self.name}",
-    "buildsInSource": "_build",
     "buildEnv": { "ODOC_SYNTAX": "ml" }
   },
   "scripts": {
-    "run": "esy x #{self.name}.exe",
-    "dev": "dune build -p #{self.name} --watch",
+    "run": "./_esy/default/build/default/bin/main.exe",
     "test": "dune build @test/runtest -f",
+    "test:watch": "dune build @test/runtest -fw --no-buffer",
     "format": "dune build @fmt --auto-promote",
     "doc": "dune build @doc",
     "doc-path": "echo #{self.target_dir}/default/_doc/_html/index.html",
@@ -24,6 +23,7 @@
   },
   "devDependencies": {
     "@opam/alcotest": "^1.5.0",
+    "@opam/dot-merlin-reader": "*",
     "@opam/merlin": "*",
     "@opam/odoc": "*",
     "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam",

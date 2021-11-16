@@ -61,6 +61,7 @@ module Board = struct
       | Some piece -> Piece.to_string piece
       | None -> "_"
     in
+
     let string_of_row row =
       Array.fold_left
         ~f:(fun acc p -> acc ^ string_of_piece p ^ "|")
