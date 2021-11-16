@@ -5,6 +5,7 @@ RUN apt-get install -y curl git libpq-dev m4 npm unzip
 
 WORKDIR /build
 
+ADD package.json ./
 ADD package-lock.json ./
 RUN npm ci
 
