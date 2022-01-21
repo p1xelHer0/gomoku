@@ -7,8 +7,9 @@
   },
   "scripts": {
     "run": "./_esy/default/build/default/bin/main.exe",
+    "build:watch": "dune build --root . --only-package #{self.name} -fw",
     "test": "dune build @test/runtest -f",
-    "test:watch": "dune build @test/runtest -fw --no-buffer",
+    "test:watch": "dune build @test/runtest -fw",
     "format": "dune build @fmt --auto-promote",
     "doc": "dune build @doc",
     "doc-path": "echo #{self.target_dir}/default/_doc/_html/index.html",
