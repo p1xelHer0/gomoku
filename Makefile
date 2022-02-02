@@ -66,7 +66,7 @@ fmt:
 
 .PHONY: switch
 switch:
-	opam switch create ./ 4.13.1
+	opam switch create ./
 
 .PHONY: deps
 deps:
