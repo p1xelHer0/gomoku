@@ -1,17 +1,27 @@
 NAME := gomoku
 
-.PHONY: switch
+.PHONY: help
+help:
+	@echo "- make dev               setup opam swtich, install dependencies and editor tools"
+	@echo "- make build             to build the project"
+	@echo "- make run               to run the server"
+	@echo "- make watch             to run the project in watch mode"
+	@echo "- make test              to run the tests"
+	@echo "- make test-watch        to run the tests in watch mode"
+	@echo "- make coverage-serve    to serve the coverage on https://localhost:8002"
+	@echo "- make docs              to build the docs"
+	@echo "- make docs-watch        to build the docs in watch mode"
+	@echo "- make docs-open         to open the docs"
+	@echo "- make fmt               to format the code"
+	@echo "- make utop              to run utop"
+	@echo "- make clean             to clean the project"
+
+.PHONY: dev
 switch:
 	opam update
 	[[ $(shell opam switch show) == $(shell pwd) ]] || \
 		opam switch create -y . 4.13.1 --deps-only --with-test --with-doc
 	opam install merlin ocaml-lsp-server ocamlformat ocamlformat-rpc utop -y
-
-.PHONY: dev
-dev:
-	opam update
-	opam install merlin ocaml-lsp-server ocamlformat ocamlformat-rpc utop -y
-	opam install --deps-only --with-test --with-doc -y .
 
 .PHONY: build
 build:
