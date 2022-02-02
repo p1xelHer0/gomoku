@@ -1,5 +1,18 @@
 NAME := gomoku
 
+.PHONY: switch
+switch:
+	opam update
+	[[ $(shell opam switch show) == $(shell pwd) ]] || \
+		opam switch create -y . 4.13.1 --deps-only --with-test --with-doc
+	opam install merlin ocaml-lsp-server ocamlformat ocamlformat-rpc utop -y
+
+.PHONY: dev
+dev:
+	opam update
+	opam install merlin ocaml-lsp-server ocamlformat ocamlformat-rpc utop -y
+	opam install --deps-only --with-test --with-doc -y .
+
 .PHONY: build
 build:
 	dune build @install
@@ -63,16 +76,3 @@ utop:
 .PHONY: fmt
 fmt:
 	dune build @fmt --auto-promote
-
-.PHONY: switch
-switch:
-	opam switch create ./
-
-.PHONY: deps
-deps:
-	opam install ./ --deps-only --with-test
-	dune build
-
-.PHONY: deps-editor
-deps-editor:
-	opam install ocaml-lsp-server merlin ocamlformat ocamlformat-rpc utop
