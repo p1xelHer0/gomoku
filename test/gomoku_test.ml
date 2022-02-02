@@ -38,7 +38,7 @@ let test_game () =
           in
 
           Alcotest.(check bool) "don't mutate original" true (piece_1 = piece_2)
-    )
+      )
 
 let suite =
   [

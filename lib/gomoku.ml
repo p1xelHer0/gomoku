@@ -8,9 +8,7 @@ module Coordinate = struct
   }
 
   let make ~x ~y = { x; y }
-
   let x c = c.x
-
   let y c = c.y
 
   let to_string coordinate =
@@ -19,8 +17,6 @@ module Coordinate = struct
     ^ ","
     ^ string_of_int (y coordinate)
     ^ ")"
-
-  let pp ppf t = Format.printf ppf "%d" t
 end
 
 module Piece = struct
@@ -29,7 +25,6 @@ module Piece = struct
     | O
 
   let yojson_of_t = function X -> `String "x" | O -> `String "o"
-
   let to_string = function X -> "x" | O -> "o"
 end
 
@@ -37,9 +32,7 @@ module Player = struct
   type t = string [@@deriving yojson_of]
 
   let make id = id
-
   let is_equal_to p1 p2 = p1 = p2
-
   let to_string player = player
 end
 
@@ -47,7 +40,6 @@ module Board = struct
   type t = Piece.t option array array [@@deriving yojson_of]
 
   let max_size = 50
-
   let min_size = 10
 
   let make size =
@@ -238,8 +230,7 @@ module Game = struct
               | Piece.O ->
                   if p1 = 5
                   then Some `Player_1_Win
-                  else check_row_aux ~i:(i + 1) ~p2:(p2 + 1) ~p1:0
-            )
+                  else check_row_aux ~i:(i + 1) ~p2:(p2 + 1) ~p1:0)
           | None ->
               if p1 = 5
               then Some `Player_1_Win

@@ -26,11 +26,8 @@ module State = struct
   type t = Game.t Games.t
 
   let games = ref Games.empty
-
   let add_game id game games = Games.add id game games
-
   let remove_game id games = Games.remove id games
-
   let get_game id games = Games.find_opt id games
 end
 
@@ -55,8 +52,7 @@ let new_game request =
               ^ string_of_int max_size
               ^ ", "
               ^ string_of_int size
-              ^ " is too small"
-              )
+              ^ " is too small")
         | Error (`Board_Size_Too_Big (size, min_size, max_size)) ->
             Dream.json
               ("The Board size of the game needs to be between"
@@ -65,14 +61,12 @@ let new_game request =
               ^ string_of_int max_size
               ^ ", "
               ^ string_of_int size
-              ^ " is too big"
-              )
+              ^ " is too big")
         | Ok new_game ->
             State.games := State.add_game game_id new_game !State.games;
             new_game |> Game.to_json |> Dream.json
       with
-      | _ -> Dream.json "Invalid POST data for new_game"
-    )
+      | _ -> Dream.json "Invalid POST data for new_game")
   | Some _game -> Dream.json ("Game with ID #" ^ game_id ^ " already exists")
 
 let end_game request =
@@ -107,8 +101,7 @@ let play_game request =
                   ("Player "
                   ^ Player.to_string player
                   ^ " is not a part of Game with ID #"
-                  ^ game_id
-                  )
+                  ^ game_id)
             | Error (`Player_Not_Next player) ->
                 Dream.json
                   ("It's not player " ^ Player.to_string player ^ "s turn")
@@ -116,28 +109,23 @@ let play_game request =
                 Dream.json
                   ("Piece on coordinates "
                   ^ Coordinate.to_string coordinate
-                  ^ " has already been placed"
-                  )
+                  ^ " has already been placed")
             | Error (`Piece_Out_Of_Bounds coordinate) ->
                 Dream.json
                   ("Piece on coordinates "
                   ^ Coordinate.to_string coordinate
-                  ^ " would be placed out of bounds"
-                  )
+                  ^ " would be placed out of bounds")
             | Ok game ->
                 State.games := State.add_game game_id game !State.games;
                 game |> Game.to_json |> Dream.json
           with
-          | _ -> Dream.json "Invalid PUT data for play_game"
-        )
+          | _ -> Dream.json "Invalid PUT data for play_game")
       | Some winner ->
           Dream.json
             ("Game with ID #"
             ^ game.id
             ^ " has already been won by player "
-            ^ winner
-            )
-    )
+            ^ winner))
 
 let view_game request =
   let game_id = Dream.param "game_id" request in
@@ -167,8 +155,7 @@ let () =
          Dream.post "/end_game/:game_id" (fun request -> end_game request);
          Dream.get "/view_game/:game_id" (fun request -> view_game request);
          Dream.get "/view_game/:game_id/pretty" (fun request ->
-             view_game_pretty request
-         );
+             view_game_pretty request);
          Dream.get "/view_all_games" (fun request -> view_all_games request);
        ]
   @@ Dream.not_found

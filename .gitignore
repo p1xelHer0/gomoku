@@ -1,4 +1,5 @@
 *.a
+
 *.annot
 *.cma
 *.cmi
@@ -16,6 +17,8 @@ _build/
 .merlin
 
 _opam/
+
+_coverage
 
 _esy
 _export/

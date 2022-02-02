@@ -54,8 +54,7 @@ module Board : sig
     ( t,
       [> `Board_Size_Too_Big of int * int * int
       | `Board_Size_Too_Small of int * int * int
-      ]
-    )
+      ] )
     result
   (** [make size] returns a [Ok t] if the board is between the [min_size] and 
       [max_size].
@@ -77,8 +76,7 @@ module Board : sig
     ( t,
       [> `Piece_Already_Placed of Coordinate.t
       | `Piece_Out_Of_Bounds of Coordinate.t
-      ]
-    )
+      ] )
     result
   (** [place_piece piece coordinate board] attempts to create a new [t]
       by placing a [piece] on [t] at the [coordinate].
@@ -115,8 +113,7 @@ module Game : sig
     ( t,
       [> `Board_Size_Too_Big of int * int * int
       | `Board_Size_Too_Small of int * int * int
-      ]
-    )
+      ] )
     result
   (** [make size player_1 player_2 game_id] returns a [Ok t] if the game is 
       between the [min_size] and [max_size] and if both players have difference 
@@ -154,8 +151,7 @@ module Game : sig
       | `Piece_Out_Of_Bounds of Coordinate.t
       | `Player_Not_Next of Player.t
       | `Player_Not_Part_Of_Game of Player.t * string
-      ]
-    )
+      ] )
     result
   (** [place_piece player coordinate game] returns a [t] with a updated [board] 
       by placing a piece assigned to the [player] on [board] at the 
@@ -192,8 +188,7 @@ module Game : sig
       | `Piece_Out_Of_Bounds of Coordinate.t
       | `Player_Not_Next of Player.t
       | `Player_Not_Part_Of_Game of Player.t * string
-      ]
-    )
+      ] )
     result
 
   val to_string : t -> string
