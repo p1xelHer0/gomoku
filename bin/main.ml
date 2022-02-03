@@ -152,7 +152,7 @@ let () =
        [
          Dream.post "/new_game/:game_id" (fun request -> new_game request);
          Dream.put "/play_game/:game_id" (fun request -> play_game request);
-         Dream.post "/end_game/:game_id" (fun request -> end_game request);
+         Dream.delete "/end_game/:game_id" (fun request -> end_game request);
          Dream.get "/view_game/:game_id" (fun request -> view_game request);
          Dream.get "/view_game/:game_id/pretty" (fun request ->
              view_game_pretty request);

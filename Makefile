@@ -4,8 +4,9 @@ NAME := gomoku
 help:
 	@echo "- make dev               setup opam swtich, install dependencies and editor tools"
 	@echo "- make build             to build the project"
+	@echo "- make watch             to build in watch mode"
 	@echo "- make run               to run the server"
-	@echo "- make watch             to run the project in watch mode"
+	@echo "- make serve             to run the server in watch mode"
 	@echo "- make test              to run the tests"
 	@echo "- make test-watch        to run the tests in watch mode"
 	@echo "- make coverage-serve    to serve the coverage on https://localhost:8002"
@@ -27,13 +28,17 @@ switch:
 build:
 	dune build @install
 
-.PHONY: watch
-watch:
-	sh ./watch.sh
-
 .PHONY: run
 run:
 	dune exec $(NAME)
+
+.PHONY: watch
+watch:
+	dune build @install -w
+
+.PHONY: serve
+serve:
+	sh ./watch.sh
 
 TEST ?= test
 
