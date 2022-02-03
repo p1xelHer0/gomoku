@@ -2,7 +2,7 @@ name: CD
 on:
   push:
     branches:
-      - main
+      - wip # testing
 
   pull_request:
     branches:
