@@ -1,10 +1,12 @@
-FROM alpine:3.15
+FROM alpine:3.15 as build
+
+WORKDIR /home/opam
+ADD . .
+
+FROM alpine:3.15 as run
 
 RUN apk add --update libev
 
-WORKDIR /home/opam
-ADD _build/default/bin .
-
-COPY /_build/default/bin/main.exe /bin/app
+COPY --from=build /home/opam/_build/default/bin/main.exe /bin/app
 
 ENTRYPOINT /bin/app
