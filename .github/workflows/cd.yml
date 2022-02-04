@@ -1,23 +1,52 @@
-name: Fly Deploy
+name: CD
 on:
   push:
     branches:
       - wip # testing
+
   pull_request:
     branches:
       - main
+
+  schedule:
+    - cron: 0 1 * * MON
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
 jobs:
-  deploy:
-    name: Deploy app
+  build:
+    name: Build OCaml executable
 
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        ocaml-compiler:
+          - 4.13.1
+
+    runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: superfly/flyctl-actions@1.1
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use OCaml ${{ matrix.ocaml-compiler }}
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: ${{ matrix.ocaml-compiler }}
+
+      - name: "Install OCaml dependencies"
+        run: opam install . --deps-only --with-test
+
+      - name: "Build executable"
+        run: opam exec -- dune build
+
+      - name: "Run tests"
+        run: opam exec -- dune runtest
+
+      - name: "Deploy to Fly.io"
+        uses: superfly/flyctl-actions@1.1
         with:
           args: "deploy"
