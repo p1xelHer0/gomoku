@@ -1,9 +1,8 @@
-FROM debian:stable-slim
+FROM alpine:3.15
 
-RUN apt-get update
-RUN apt-get install -y libev4 libpq5 libssl1.1
+RUN apk add --update libev
 
-WORKDIR /ocaml
+WORKDIR /home/opam
 ADD _build/default/bin .
 
 COPY /_build/default/bin/main.exe /bin/app
